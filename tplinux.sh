@@ -12,6 +12,7 @@ Menu(){
 	echo "8/ Être Corpo Cogip"
 	echo "9/ Netacad et Inetdoc"
 
+	echo "A tout moment, la commande exit quitte le script"
 	read choix
 	# $commande = ""
 	case $choix in
@@ -44,10 +45,12 @@ Menu(){
 		echo "Il FAUT faire les contrôles Netacad, et lire le cours sur Inetdoc"
 		xdg-open "https://www.netacad.com/"
 		xdg-open "https://inetdoc.net/"
+		;;
 	  *)
 		echo "Commande: $choix"
 		echo "Commande inconnu ou exit, byebye"
 		exit
+		;;
 	esac
 }
 
