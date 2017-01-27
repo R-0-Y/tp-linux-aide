@@ -88,3 +88,15 @@ Bon dans le script il n'y a pas grand chose, lisez le cours !
 ## Le script
 
 Le script fourni est un script shell qui va vous guider dans l'utilisation des différentes commandes de base du système.
+
+## Netacad
+
+https://www.netacad.com/
+
+Il vous FAUT faire les contrôles sur Netacad, ce n'est pas très compliqué !
+
+## Inetdoc
+
+https://inetdoc.net/
+
+Sur Inetdoc, vous retrouverez tous les cours de Mr Latu dans la page Présentation.

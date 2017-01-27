@@ -10,6 +10,7 @@ Menu(){
 	echo "6/ Contrôler et gèrer les droits utilisateur"
 	echo "7/ Petite introduction aux services"
 	echo "8/ Être Corpo Cogip"
+	echo "9/ Netacad et Inetdoc"
 
 	read choix
 	# $commande = ""
@@ -39,6 +40,10 @@ Menu(){
 	  	echo "Cela s'apprend !"
 	  	xdg-open "https://www.youtube.com/watch?v=QYWGd3QhD48"	
 	  	;;
+	  9)
+		echo "Il FAUT faire les contrôles Netacad, et lire le cours sur Inetdoc"
+		xdg-open "https://www.netacad.com/"
+		xdg-open "https://inetdoc.net/"
 	  *)
 		echo "Commande: $choix"
 		echo "Commande inconnu ou exit, byebye"
