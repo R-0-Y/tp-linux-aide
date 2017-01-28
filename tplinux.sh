@@ -251,9 +251,9 @@ DroitUser(){
 		echo ""
 
 		echo "-rw-r--r-- veut dire: fichier, lecture écriture en droit utilisateur, lecture en droit groupe, et lecture en droit pour les autres."
-		echo "Si on veut donner les droits d'écriture au groupe par exemple, il faut utiliser la command: chmod"
+		echo "Si on veut donner les droits d'exécution au groupe par exemple, il faut utiliser la command: chmod"
 		echo "Il y a plusieurs façon de l'utiliser, soit en spécifiant les nouveaux droits que pour l'user, groupe ou les autres (ou plusieurs en même temps) soit en donnant le droit tel que 777 directement"
-		echo "Pour donner les droits d'écriture au groupe donc: chmod g+x nomdufichier"
+		echo "Pour donner les droits d'exécution au groupe donc: chmod g+x nomdufichier"
 		echo "Par exemple: chmod g+x latualecranequibrille"
 		read commande
 		# check=`echo $commande | cut -d " " -f1`
