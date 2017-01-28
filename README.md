@@ -89,7 +89,10 @@ Bon dans le script il n'y a pas grand chose, lisez le cours !
 
 Le script fourni est un script shell qui va vous guider dans l'utilisation des différentes commandes de base du système.
 
-ATTENTION ! Le script ne vérifie pas les commandes que vous inscrivez ! J'estime que vous savez lire et recopier les commandes que j'indique.
+Le script vérifie certaines des commandes que vous inscrivez ! J'estime que vous savez lire et recopier les commandes que j'indique tout de même.
+
+Veuillez avoir un compte ayant les droits super-utilisateur.
+
 ## Netacad
 
 https://www.netacad.com/

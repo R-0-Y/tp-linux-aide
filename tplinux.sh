@@ -14,7 +14,7 @@ Menu(){
 
 	echo "A tout moment, la commande exit quitte le script"
 	read choix
-	# $commande = ""
+
 	case $choix in
 	  1)
 		Ajoututilisateur
@@ -54,31 +54,92 @@ Menu(){
 	esac
 }
 
+Check4Commande(){
+	if [ $# -ne 4 ]; then
+		echo "Tu as oublié un argument ou en a un en trop"
+		Menu
+	elif [ ! "$2" = "sudo"  ]; then
+		echo "sudo et $2 ne sont pas les mêmes commandes"
+		Menu
+	elif [ ! $1 = $3 ]; then
+		echo "$1 et $3 ne sont pas les mêmes commandes"
+		Menu
+	fi
+}
+
+Check5Commande(){
+	if [ $# -ne 5 ]; then
+		echo "Tu as oublié un argument ou en a un en trop"
+		Menu
+	elif [ ! "$3" = "sudo"  ]; then
+		echo "sudo et $3 ne sont pas les mêmes commandes"
+		Menu
+	elif [ ! $1 = $4 ]; then
+		echo "$1 et $4 ne sont pas les mêmes commandes"
+		Menu
+	elif [ ! $2 = $5 ]; then
+		echo "$2 et $5 ne sont pas les mêmes commandes"
+		Menu
+	fi
+}
+
+Check5moreCommande(){
+	if [ $# -lt 5 ]; then
+		echo "Tu as oublié un argument ou plus"
+		Menu
+	elif [ ! "$3" = "sudo"  ]; then
+		echo "sudo et $3 ne sont pas les mêmes commandes"
+		Menu
+	elif [ ! $1 = $4 ]; then
+		echo "$1 et $4 ne sont pas les mêmes commandes"
+		Menu
+	elif [ ! $2 = $5 ]; then
+		echo "$2 et $5 ne sont pas les mêmes commandes"
+		Menu
+	fi
+}
+CheckUser(){
+	shift 2
+	user=`grep $1 /etc/passwd | cut -d ":" -f1`
+	if [ "$1" = "$user" ]; then
+		echo "Utilisateur déjà présent"
+		echo "Retour au menu !"
+		Menu
+	else
+		echo "Utilisateur non ajouté, on retente (si ça refail, fait un exit haha)"
+		Ajoututilisateur
+	fi
+}
+
 Ajoututilisateur(){
 	# commande adduser
 		echo ""
 		echo "Suivre les questions demandé par la commande"
 		echo "Pas besoin d'entrer toutes les informations demandé"
 		echo "hormis le mot de passe évidemment"
-		echo "commande: adduser nomutilisateur (faut l'écrire maintenant)"
+		echo "Il faut être en root/super-utilisateur"
+		echo "commande: sudo adduser nomutilisateur (faut l'écrire maintenant)"
 	    read commande
 	    echo "Tu as écris: $commande"
 	    echo ""
+
+	    Check4Commande "adduser" $commande
 		echo "Je vais la lancer !"
 		eval $commande
 		echo ""
 		
-		echo "Retour au menu !"
+		CheckUser $commande
 
-		echo "Bravo (non, je vérifie pas si tu as mis la bonne commande ou non) ! Tu peux vérifier que ça a bien fonctionné de diverse façon. Check le fichier /etc/passwd, regarder le dossier /home, ..."
+		echo "Bravo ! Tu peux vérifier que ça a bien fonctionné de diverse façon. Check le fichier /etc/passwd, regarder le dossier /home, ..."
 		echo "J'ai une préférence pour le fichier /etc/passwd (car on peut ajouter un utilisateur sans lui faire de dossier dans /home)"
-		echo "Tapes: cat /etc/passwd | grep nomutilisateur"
-	    read commande
-	    echo "Tu as écris: $commande"
+		echo "Par exemple:  grep nomutilisateur /etc/passwd"
+		echo "(je vais te le faire)"
+		sleep 2
+		grep `echo $commande | cut -d " "  -f3` /etc/passwd
 	    echo ""
-		echo "Je vais la lancer !"
-		eval $commande
-		echo ""
+	    echo "Si une ligne c'est affichée (et ça devrait être le cas haha), c'est que l'utilisateur est bien ajouté"
+	    echo ""
+		
 		
 		echo "Retour au menu !"
 		Menu
@@ -93,6 +154,7 @@ Majlistpaquet(){
 	    echo "Il faut de plus être en super-utilisateur, donc sudo devant la commande (ou être root)"
 	    echo "Donc: sudo aptitude update"
 	    read commande
+	    Check5Commande "aptitude" "update" $commande
 	    echo "Tu as écris: $commande"
 	    echo ""
 		echo "Je vais la lancer !"
@@ -112,6 +174,8 @@ Majpaquets(){
 		echo "Différence entre update et upgrade ? Update mets à jour la liste des paquets pouvant être mis à jour, upgrade les mets à jour (et installe les nouvelles dépendances si nécessaire)"
 	    echo "Donc: sudo aptitude upgrade"
 	    read commande
+   	    Check5Commande "aptitude" "upgrade" $commande
+
 	    echo "Tu as écris: $commande"
 	    echo ""
 		echo "Je vais la lancer ! (il faudra valider l'installation des paquets)"
@@ -131,6 +195,7 @@ Majdistrib(){
 		echo "Différence entre update et upgrade ? Update mets à jour la liste des paquets pouvant être mis à jour, upgrade les mets à jour (et installe les nouvelles dépendances si nécessaire)"
 	    echo "Donc: sudo aptitude dist-upgrade"
 	    read commande
+   	    Check5Commande "aptitude" "dist-upgrade" $commande
 	    echo "Tu as écris: $commande"
 	    echo ""
 		echo "Je vais la lancer ! (il faudra valider l'installation des paquets)"
@@ -144,8 +209,9 @@ Majdistrib(){
 SearchInstall(){
 		echo ""
 		echo "Pour rechercher un paquet, nous allons utiliser la commande: aptitude search motclé"
-		echo "Par exemple: aptitude search wireshark"
+		echo "Par exemple: sudo aptitude search wireshark"
 		read commande
+   	    Check5moreCommande "aptitude" "search" $commande
 	    echo "Tu as écris: $commande"
 	    echo ""
 		echo "Je vais la lancer ! "
@@ -166,6 +232,13 @@ DroitUser(){
 		echo "Tout d'abord on va créer un fichier, le plus simple c'est tout simplement la commande: touch nomdufichier"
 		echo "Par exemple: touch latualecranequibrille"
 		read commande
+		# check=`echo $commande | cut -d " " -f1`
+		if [ ! `echo $commande | cut -d " " -f1` = "touch" ]; then
+			echo "Tu ne sais pas écrire touch ?" 
+			DroitUser
+		fi
+		nomfich=`echo $commande | cut -d " " -f2`
+
 	    echo "Tu as écris: $commande"
 	    echo ""
 		echo "Je vais la lancer ! "
@@ -178,11 +251,20 @@ DroitUser(){
 		echo ""
 
 		echo "-rw-r--r-- veut dire: fichier, lecture écriture en droit utilisateur, lecture en droit groupe, et lecture en droit pour les autres."
-		echo "Si on veut donner les droits d'écriture au groupe par exemple, il faut utiliser la command: chmod"
+		echo "Si on veut donner les droits d'exécution au groupe par exemple, il faut utiliser la command: chmod"
 		echo "Il y a plusieurs façon de l'utiliser, soit en spécifiant les nouveaux droits que pour l'user, groupe ou les autres (ou plusieurs en même temps) soit en donnant le droit tel que 777 directement"
-		echo "Pour donner les droits d'écriture au groupe donc: chmod g+w nomdufichier"
-		echo "Par exemple: chmod g+w latualecranequibrille"
+		echo "Pour donner les droits d'exécution au groupe donc: chmod g+x nomdufichier"
+		echo "Par exemple: chmod g+x latualecranequibrille"
 		read commande
+		# check=`echo $commande | cut -d " " -f1`
+		if [ ! `echo $commande | cut -d " " -f1` = "chmod" ]; then
+			echo "Tu ne sais pas écrire chmod ?" 
+			DroitUser
+		elif [ ! `echo $commande | cut -d " " -f2` = "g+x" ]; then
+			echo "C'est «g+x» !"
+			DroitUser
+		fi
+
 	    echo "Tu as écris: $commande"
 	    echo ""
 		echo "Je vais la lancer ! "
@@ -191,22 +273,38 @@ DroitUser(){
 
 		echo "On le test avec un ls -l nomdufichier"
 		read commande
-		echo "Tu as écris: $commande"
+		if [ ! `echo $commande | cut -d " " -f1` = "ls" ]; then
+			echo "ls, un L minuscule et un S minuscule !"
+			echo "Comme ça"
+			ls -l $nomfich
+		elif [ ! `echo $commande | cut -d " " -f2` = "-l" ]; then
+			echo "Pls kill me, -l"
+			echo "Comme ça"
+			ls -l $nomfich
+		else
+			echo "Tu as écris: $commande"
+			echo ""
+			echo "Je vais la lancer ! "
+			eval $commande
+		fi
 		echo ""
-		echo "Je vais la lancer ! "
-
 		echo "Pour modifier les droits par défaut, il faut changer l'umask, pour cela: umask xxxx"
 		echo "Par exemple: umask 0027"
 		echo "Ça donnera les droits -rw-r-----"
 		echo "Retour au menu !"
+		rm $nomfich
 		Menu
 }
 
 IntroServices(){
 		echo ""
 		echo "Pour voir la liste des services qui tournent sur une machine (munie de systemd, ce qui est le cas des machines un tant soit peu mise à jour)"
-		echo "Pour lister les serices lancé (q pour quitter): systemctl"
+		echo "Pour lister les services lancé (q pour quitter): systemctl"
 		read commande
+		if [ ! `echo $commande` = "systemctl" ]; then
+			echo "J'ai dit systemctl..."
+			IntroServices
+		fi
 	    echo "Tu as écris: $commande"
 	    echo ""
 		echo "Je vais la lancer ! "
@@ -216,7 +314,7 @@ IntroServices(){
 		echo "Pour voir l'état d'un service en particulier: systemctl status nomduservice"
 		echo "Par exemple: systemctl status cron.service"
 		echo ""
-
+		echo "(on le fera pas, flemme)"
 		echo "On peut voir que c'est chargé (active), qu'il tourne (running), et que ça sera lancé au démarrage (enabled)"
 		echo "Pour lancer, stopper, relancer, activer au démarrage: systemctl [start|stop|reload|enable] nomduservice"
 		echo "Retour au menu !"
@@ -226,5 +324,4 @@ IntroServices(){
 echo "Instructions pour bien réussir (j'espère) le TP noté Linux"
 while true; do
 	Menu
-
 done
