@@ -85,6 +85,13 @@ On peut aussi modifier le propriétaire d'un fichier/dossier avec `chown`.
 
 Bon dans le script il n'y a pas grand chose, lisez le cours !
 
+### Information sur la machine
+
+Les informations sur la machine que nous affichons sont:
+- Informations sur le processeur
+- Informations sur le bus PCI
+- Informations sur le bus USB
+
 ## Le script
 
 Le script fourni est un script shell qui va vous guider dans l'utilisation des différentes commandes de base du système.
